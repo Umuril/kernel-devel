@@ -1,3 +1,3 @@
 #!/bin/bash
 
-../linux/scripts/kconfig/streamline_config.pl > ../build/.config 2> /dev/null
+make -C ../linux -j$(nproc) O=../build localmodconfig
