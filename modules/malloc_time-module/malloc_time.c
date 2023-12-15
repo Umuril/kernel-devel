@@ -19,6 +19,12 @@ static ssize_t bit_store(struct kobject *kobj, struct kobj_attribute *attr, cons
 	u64 start_time;
 	long siz;
 
+#ifdef CONFIG_KASAN
+	char * prefix = "KASAN Y - ";
+#else
+	char * prefix = "KASAN N - ";
+#endif
+
 	int res = kstrtol(buf, 10, &siz);
 	if (res < 0)
 		return res;
@@ -29,17 +35,17 @@ static ssize_t bit_store(struct kobject *kobj, struct kobj_attribute *attr, cons
 		pr_crit("Non sono riuscito ad allocare %ld bytes.\n", siz);
 		return -1;
 	}
-	pr_crit("Allocati %ld bytes in %lld ns\n", siz, ktime_get_ns() - start_time);
+	pr_crit("%sAllocati %ld bytes in %lld ns\n", prefix, siz, ktime_get_ns() - start_time);
 
 	start_time = ktime_get_ns();
 	for(int i = 0; i < siz; ++i) {
 		blocco[i] = 0x42;
 	}
-	pr_crit("Scritti %ld bytes in %lld ns\n", siz, ktime_get_ns() - start_time);
+	pr_crit("%sScritti %ld bytes in %lld ns\n", prefix, siz, ktime_get_ns() - start_time);
 
 	start_time = ktime_get_ns();
 	kfree(blocco);
-	pr_crit("Liberati %ld bytes in %lld ns\n", siz, ktime_get_ns() - start_time);
+	pr_crit("%sLiberati %ld bytes in %lld ns\n", prefix, siz, ktime_get_ns() - start_time);
 
 	return count;
 }

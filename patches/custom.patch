@@ -1,0 +1,20 @@
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index 1fafd54dce3c..e322f5eb8b39 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -2498,6 +2498,15 @@ static void blk_mq_insert_request(struct request *rq, blk_insert_t flags)
+ 	struct blk_mq_ctx *ctx = rq->mq_ctx;
+ 	struct blk_mq_hw_ctx *hctx = rq->mq_hctx;
+ 
++	// WARN_ONCE(true, "Patatine fritte");
++
++	// static unsigned long last_warn;
++
++	// if(time_is_before_jiffies(last_warn + HZ/10)) {
++	//	WARN(true, "Patatine col Ketchup");
++	//	last_warn = jiffies;
++	//}
++
+ 	if (blk_rq_is_passthrough(rq)) {
+ 		/*
+ 		 * Passthrough request have to be added to hctx->dispatch
